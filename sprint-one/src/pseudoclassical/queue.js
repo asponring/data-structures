@@ -12,7 +12,9 @@ Queue.prototype.enqueue = function(val){
 
 Queue.prototype.dequeue = function(){
   if(this.entrance > this.exit){
-    return this.storage[this.exit++];
+    var result = this.storage[this.exit];
+    delete this.storage[this.exit++];
+    return result;
   }
   return;
 };

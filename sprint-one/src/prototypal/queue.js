@@ -19,7 +19,9 @@ queueMethods.enqueue = function(val) {
 
 queueMethods.dequeue = function() {
   if (this.exit < this.entrance) {
-    return this.storage[this.exit++];
+    var result = this.storage[this.exit];
+    delete this.storage[this.exit++];
+    return result;
   }
   return;
 };

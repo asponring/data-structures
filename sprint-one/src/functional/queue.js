@@ -14,7 +14,9 @@ var Queue = function(){
 
   someInstance.dequeue = function(){
     if (exit < entrance) {
-      return storage[exit++];
+      var result = storage[exit];
+      delete storage[exit++];
+      return result;
     }
     return;
   };
