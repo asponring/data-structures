@@ -27,8 +27,8 @@ Graph.prototype.hasEdge = function(fromNode, toNode){
 Graph.prototype.addEdge = function(fromNode, toNode){
   var newEdge = {};
   if(!this.hasEdge(fromNode, toNode)){
-    newEdge[fromNode]=fromNode;
-    newEdge[toNode]=toNode;
+    newEdge[fromNode] = fromNode;
+    newEdge[toNode] = toNode;
     this.edges.push(newEdge);
   }
 };

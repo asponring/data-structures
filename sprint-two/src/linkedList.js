@@ -32,7 +32,7 @@ var LinkedList = function(){
         return false;
       }
       return f(node.next);
-    }
+    };
 
     return f(this.head);
   };
