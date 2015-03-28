@@ -9,21 +9,18 @@ var BloomFilter = function(size) {
 var hash1 = function(value, bloomFilter) {
   var hash = 0;
   for (var i = 0; i < value.length; i++) {
-    hash += value.charCodeAt(i);
+    hash += value.charCodeAt(i) + i;
   }
   return hash % bloomFilter.size;
 };
 var hash2 = function(value, bloomFilter) {
-  var hash = 0;
+  var result = 0;
   for (var i = 0; i < value.length; i++) {
-    hash = (hash<<5) + hash + value.charCodeAt(i);
-    hash = hash & hash; // Convert to 32bit integer
-    hash = Math.abs(hash);
+    result = result * 37 + value.charCodeAt(i);
   }
-  return hash % bloomFilter.size;
+  return result % bloomFilter.size;
 };
 var hash3 = function(value, bloomFilter) {
-  // return value.charCodeAt(1) % bloomFilter.size;
   var result = 0;
   for (var i = 0; i < value.length; i++) {
     result = result * 33 + value.charCodeAt(i);
@@ -60,12 +57,31 @@ BloomFilter.prototype.getSignature = function(value) {
 };
 
 //simple tests below
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
 var bloomFilter = new BloomFilter(18);
 
-var substrate = "We the people of the United States";
-substrate = substrate.split(" ");
-for (var i = 0; i < substrate.length; i++) {
-  bloomFilter.add(substrate[i]);
+var inFilter = "We the people of the United States";
+inFilter = inFilter.split(" ");
+for (var i = 0; i < inFilter.length; i++) {
+  bloomFilter.add(inFilter[i]);
 }
-var notInFilter = "We the people of the United States";
-notInFilter = notInFilter.split(" ");
+var substrate = "qoiOOIJDSVsdlkjwmOiKJgNlsdkfoIUYIiBX<WRiOIYYYTBVM86BNm";
+for (var i = 0; i < 1e4; i++) {
+  var size = getRandomArbitrary(2, 7);
+  var start = getRandomArbitrary(0, substrate.length - 8);
+  inFilter.push(substrate.slice(start, start + size));
+}
+
+var positives = 0;
+var negatives = 0;
+for (var i = 0; i < inFilter.length; i++) {
+  if (bloomFilter.contains(inFilter[i])) {
+    positives++;
+  } else {
+    negatives++;
+  }
+}
+console.log("Rate of positives SHOULD be .00069951\nRate of positives was ACTUALLY " + positives/10007);
