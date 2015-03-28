@@ -7,13 +7,28 @@ var BloomFilter = function(size) {
 };
 
 var hash1 = function(value, bloomFilter) {
-  return value.charCodeAt(0) % bloomFilter.size;
+  var hash = 0;
+  for (var i = 0; i < value.length; i++) {
+    hash += value.charCodeAt(i);
+  }
+  return hash % bloomFilter.size;
 };
 var hash2 = function(value, bloomFilter) {
-  return value.charCodeAt(value.length - 1) % bloomFilter.size;
+  var hash = 0;
+  for (var i = 0; i < value.length; i++) {
+    hash = (hash<<5) + hash + value.charCodeAt(i);
+    hash = hash & hash; // Convert to 32bit integer
+    hash = Math.abs(hash);
+  }
+  return hash % bloomFilter.size;
 };
 var hash3 = function(value, bloomFilter) {
-  return value.charCodeAt(1) % bloomFilter.size;
+  // return value.charCodeAt(1) % bloomFilter.size;
+  var result = 0;
+  for (var i = 0; i < value.length; i++) {
+    result = result * 33 + value.charCodeAt(i);
+  }
+  return result % bloomFilter.size;
 };
 
 BloomFilter.prototype.hashFunctions = [hash1, hash2, hash3];
@@ -44,11 +59,13 @@ BloomFilter.prototype.getSignature = function(value) {
   return signature;
 };
 
+//simple tests below
 var bloomFilter = new BloomFilter(18);
-bloomFilter.add("cat");
-bloomFilter.add("dog");
-bloomFilter.add("animals");
-console.log(bloomFilter.contains("cat"));
-console.log(bloomFilter.contains("animals"));
-console.log(bloomFilter.contains("animal"));
-console.log(bloomFilter.contains("buffalo56"));
+
+var substrate = "We the people of the United States";
+substrate = substrate.split(" ");
+for (var i = 0; i < substrate.length; i++) {
+  bloomFilter.add(substrate[i]);
+}
+var notInFilter = "We the people of the United States";
+notInFilter = notInFilter.split(" ");
