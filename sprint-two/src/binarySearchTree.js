@@ -57,31 +57,21 @@ BinarySearchTree.prototype.depthFirstLog = function(fn, tree){
   this.depthFirstLog(fn, tree.right);
 };
 
-BinarySearchTree.prototype.breadthFirstLog = function(fn, tree){
-  if (tree === undefined) {
-    tree = this;
-  }
-  var q = new Queue();
-  q.enqueue(tree);
-  while (q.size() > 0) {
-    var current = q.dequeue();
+BinarySearchTree.prototype.breadthFirstLog = function(fn){
+  var nodesToTraverse = new Queue();
+  var current;
 
+  nodesToTraverse.enqueue(this);
+  while (nodesToTraverse.size() > 0) {
+    var current = nodesToTraverse.dequeue();
+    if (current.left !== null) {
+      nodesToTraverse.enqueue(current.left);
+    }
+    if (current.right !== null) {
+      nodesToTraverse.enqueue(current.right);
+    }
+    fn(current.value);
   }
-  // var enqFn = function(val){
-  //   q.enqueue(val);
-  // };
-  // var boundEnqueue = Queue.prototype.enqueue.bind(q);
-  this.depthFirstLog(enqFn, this);
-
-  // if (tree === undefined) {
-  //   tree = this;
-  // }
-  // if (tree === null) {
-  //   return;
-  // }
-  // fn(tree.value);
-  // this.depthFirstLog(fn, tree.left);
-  // this.depthFirstLog(fn, tree.right);
 };
 
 /*
@@ -91,8 +81,10 @@ BinarySearchTree.prototype.breadthFirstLog = function(fn, tree){
  * depthFirstLog: O(logN)
  */
 
-//extra credit code below
-var Queue = function() {
+ //queue helper class
+ var Queue = function() {
+  // Hey! Rewrite in the new style. Your code will wind up looking very similar,
+  // but try not not reference your old code in writing the new style.
   this.storage = {};
   this.entrance = 0;
   this.exit = 0;
@@ -114,4 +106,3 @@ Queue.prototype.dequeue = function(){
 Queue.prototype.size = function(){
   return this.entrance - this.exit;
 };
-
