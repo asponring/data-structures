@@ -76,12 +76,9 @@ for (var i = 0; i < 1e4; i++) {
 }
 
 var positives = 0;
-var negatives = 0;
 for (var i = 0; i < inFilter.length; i++) {
   if (bloomFilter.contains(inFilter[i])) {
     positives++;
-  } else {
-    negatives++;
   }
 }
 console.log("Rate of positives SHOULD be .00069951\nRate of positives was ACTUALLY " + positives/10007);

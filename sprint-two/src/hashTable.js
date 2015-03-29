@@ -19,7 +19,7 @@ HashTable.prototype.retrieve = function(k){
   var result = _.find(bucket, function(elem, i) {
     return elem[0] === k;
   });
-  console.log("result is: ", result);
+  // console.log("result is: ", result);
   return (result === undefined) ? null :result[1];
 };
 
